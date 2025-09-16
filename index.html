@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./assets/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Myra+Pro&display=swap">
+    <link rel="stylesheet" href="./css/login.css">
+    <script type="module" src="./ui/ui-login.js"></script>
+
+    <title>B26HOA</title>
+</head>
+<body>
+    <div class="businesslogo">
+        <img src="./assets/logo.png" alt="B26HOA Logo">
+    </div>
+    <div class="container">
+        <div class="intro">
+            <h1>Barangay 26</h1>
+            <h1 class="moveleft">Homeowners'</h1>
+            <h1 class="moveleft1">Association Inc.</h1>
+        </div>
+
+        <div class="login">
+            <h3>Login Page</h3>
+
+            <div class="warning-message" style="display: none;">
+                <i class="fas fa-exclamation-triangle warning-icon"></i>
+                <div class="warning-content">
+                    <h3>Login Error</h3>
+                    <p>Your password is incorrect.</p>
+                </div>
+                <button class="close-warning">&times;</button>
+            </div>
+
+            <form id="login-form">
+                <div class="input-group">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <input type="email" name="email" placeholder="Enter your Email..." required>
+                </div>
+                
+                <div class="input-group">
+                    <div class="password-wrapper">
+                        <i class="fa-solid fa-key"></i>
+                        <input type="password" name="password" id="passwordInput" placeholder="Enter your Password..." required>
+                        <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
+                    </div>
+                </div>
+                
+                <input class="submit" type="submit" value="Submit">
+
+                <p>Don't have an account? Contact Us</p>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <a href="tel:+639325665345">
+            <i class="fa-solid fa-phone"></i>
+            <strong>Contact Us:</strong>09325665345
+        </a>
+        <a href="https://maps.google.com/?q=945+Masterson+Ave,+Cagayan+de+Oro,+Philippines">
+            <i class="fa-solid fa-location-dot"></i>
+            <strong>Location:</strong>945 Masterson Ave, Cagayan de Oro, Philippines
+        </a>
+    </div>
+</body>
+</html>

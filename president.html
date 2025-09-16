@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./assets/logo.png">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Myra+Pro&display=swap" rel="stylesheet">
+    <script src="https://cdn.anychart.com/releases/8.13.0/js/anychart-core.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.13.0/js/anychart-pie.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.13.0/js/anychart-cartesian.min.js"></script>
+    
+
+    <script type="module" src="./api-users.js"></script>
+    
+    <script type="module" src="./api/api-statistics.js" defer></script>
+    <script type="module" src="./api/api-homeowner.js" defer></script>
+
+    <script type="module" src="./api/supabaseConfiguration.js"></script>
+
+    <script type="module" src="./api/api-announcement.js"></script>
+    <script type="module" src="./ui/ui-announcement.js"></script>
+
+
+    <script type="module" src="./ui/ui-notification.js"></script>
+    <script type="module" src="./api/api-notification.js"></script>
+
+    <script type="module" src="./ui/ui-homeowner.js"></script>
+    <script type="module" src="./api/api-homeowner.js"></script>
+
+    <script type="module" src="./api/api-dues.js"></script>
+    <script type="module" src="./ui/ui-due.js"></script>
+
+    <script type="module" src="./ui/ui-calendarEvent.js"></script>
+    <script type="module" src="./api//api-calendarEvent.js"></script>
+    
+    <script type="module" src="./ui/ui-concern.js"></script>
+    <script type="module" src="./api/api-concerns.js"></script>
+
+    <script type="module" src="./ui/ui-dashboard.js"></script>
+    <script type="module" src="./api/auth-guard.js"></script>
+
+    <link rel="stylesheet" href="./css/style.css">
+    
+    <title>B26HOA Portal</title>
+</head>
+<body>
+
+    <div class="dashboard">
+        <div class="sidebar">
+            <div class="profile_logo">
+                <img src="./assets/logo.png" alt="">
+            </div>
+
+            <div class="navigate">
+                <a href="#" onclick="showSection('dashboard')"><i class="fa-solid fa-gauge"></i>Dashboard</a>
+                <a href="#" onclick="showSection('notification')"><i class="fa-solid fa-bell"></i>Notifications</a>
+                <a href="#" onclick="showSection('anouncement')"><i class="fa-solid fa-bullhorn"></i>Anouncements</a>
+                <a href="#" onclick="showSection('homeowners')"><i class="fa-solid fa-house-user"></i>Homeowners</a>
+                <a href="#" onclick="showSection('due-overview')"><i class="fa-solid fa-coins"></i>Dues</a>
+                <a href="#" onclick="showSection('calendar-event')"><i class="fa-solid fa-calendar-days"></i>Calendar & Events</a>
+                <a href="#" onclick="showSection('concern')"><i class="fa-solid fa-triangle-exclamation"></i>Concern Managenent</a>
+            </div>
+
+            <div class="log">
+                <a id="logout-button"><i class="fa-solid fa-right-from-bracket"></i>Logout</a>
+            </div>
+        </div>
+        <nav>
+            <div class="navbar">
+                <a onclick="showSection('notification')"><i class="fa-solid fa-bell"></i></a>
+                <span class="badge" id="notificationBadge">0</span>
+            </div>
+
+            <div class="navbar">
+                <span class="badge" id="announcementBadge">0</span>
+                <a onclick="showSection('anouncement')"><i class="fa-solid fa-bullhorn"></i></a>
+            </div>
+
+            <div class="profile">
+                <a href=""><i class="fa-solid fa-circle-user"></i></a>
+                <a href=""><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </nav>
+    </div>
+
+    <section id="dashboard" class="section active">
+        <div class="card-indicator">
+            <div class="cards" id="card-notification">
+                <a href=""><i class="fa-solid fa-bell"></i></a>
+                <p>Notifications</p>
+                <span id="notification-indicator"><h1>0</h1></span>
+            </div>
+
+            <div class="cards" id="card-anouncement">
+                <a href=""><i class="fa-solid fa-bullhorn"></i></a>
+                <p>Anouncements</p>
+                <span id="announcement-indicator"><h1>0</h1></span>
+            </div>
+
+            <div class="cards" id="card-homeowner">
+                <a href=""><i class="fa-solid fa-users"></i></a>
+                <p>Homeowners</p>
+                <span id="homeowner-indicator"><h1>0</h1></span>
+            </div>
+
+            <div class="cards" id="card-due">
+                <a href=""><i class="fa-solid fa-coins"></i></a>
+                <p>Dues</p>
+                <span id="due-indicator"><h1>0</h1></span>
+            </div>
+
+            <div class="cards" id="card-event">
+                <a href=""><i class="fa-solid fa-calendar-day"></i></a>
+                <p>Events</p>
+                <span id="event-indicator"><h1>0</h1></span>
+            </div>
+
+
+            <div class="cards" id="card-concernmanagement">
+                <a href=""><i class="fa-solid fa-landmark"></i></a>
+                <p>Concern Management</p>
+                <span id="concern-indicator"><h1>0</h1></span>
+            </div>
+        
+
+        </div>
+        <div class="dashboard-row">
+            <div class="container" id="pie-chart"></div>
+            <div class="container" id="line-chart"></div>
+            <div class="dashboard-concern">
+                <div id="pendingConcernsArea"></div>
+            </div>
+        </div>
+
+        <div class="card full-width">
+            <div class="card-header">
+                <i class="fas fa-history"></i>
+                <h2>History Due Payment Logs</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-container" >
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Homeowner Name</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableHistoryLog"></tbody>
+                    </table>
+                </div>
+            </div>
+    </section>
+
+    <section id="notification" class="section">
+        <div class="header">
+            <h1>🔔 Notifications</h1>           
+        </div>
+        
+        <div class="controls">
+            <button class="add-btn" onclick="notification.staff().openForm()"><i class="fa-solid fa-square-plus"></i> Add Notification</button>
+
+            <div class="rightControls">
+                <button class="add-btn" onclick="notification.staff().addNotificationType()"><i class="fa-solid fa-layer-group"></i> Create Notification Type</button>
+                <div class="filter-btn">
+                    <label for="typeFilter"><i class="fa-solid fa-filter"></i> Filter</label>
+                    <select id="typeFilter"></select>     
+                </div>
+
+              <button class="view-btn" onclick="notification.staff().switchView('list')"><i class="fa-solid fa-list-ul"></i> </i> List View</button>
+              <button class="view-btn" onclick="notification.staff().switchView('card')"><i class="fa-solid fa-layer-group"></i></i> Card View</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="notificationListView">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th class="table-header">Message</th>
+                        <th>Created At</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="notificationTable"></tbody>
+            </table>
+        </div>
+
+        <div id="notificationCardView"></div>
+        
+        <div id="createNotificationModal" class="modal">
+            <div class="notification-modal">
+                <form id="notificationForm">
+                    <h2 class="form-header">Create Notification</h2>
+                    <h3>Title:</h3> <input id="notificationTitle" placeholder="Announcement title" required></input>
+                    <h3>Notification Message:</h3><textarea id="notificationMessage" placeholder="Announcement message" required></textarea>
+                    <h3>Notification Type Selection:</h3>
+                    <select id="notificationType" required>
+                        <option value="">Select Notification Type</option>
+                    </select>
+                    <button class="submit-btn" type="submit">Submit</button>
+                    <button class="close-btn" onclick="notification.staff().closeForm()"><i class="fa-solid fa-xmark"></i></button>
+                </form>
+            </div>
+        </div>
+
+        
+        <div id="createTypeSection" class="modal">
+            <div class="announcement-modal">
+                <h3>Create New Category</h3>
+                <form id="typeForm">
+                    <input type="text" id="newType" placeholder="Enter Category Name..." required />
+                    <button class="add-btn" type="submit">Add Category</button>
+                </form>
+                <button class="close-btn" onclick="notification.staff().closeType()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+
+        <div id="toastContainer" class="toast-container"></div>
+    </section>
+
+   <section id="anouncement" class="section">
+        <div class="header">
+            <h1>📢 Announcements</h1>
+        </div>
+
+        <div class="controls">
+            <button class="add-btn" onclick="announcement.staff().openForm()"><i class="fa-solid fa-plus"></i> Add Announcement</button>
+
+            <div class="rightControls">
+                <button class="add-btn" onclick="announcement.staff().addAnnouncementCategory()"><i class="fa-solid fa-layer-group"></i> Create Category</button>
+                <div class="filter-btn">
+                    <label for="categoryFilter"><i class="fa-solid fa-filter"></i> Filter</label>
+                    <select id="categoryFilter"></select>
+                </div>
+
+                <button class="view-btn" onclick="announcement.staff().switchView('list')"> <i class="fa-solid fa-list-ul"></i> List View</button>
+                <button class="view-btn" onclick="announcement.staff().switchView('card')"><i class="fa-solid fa-layer-group"></i> Card View</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="announcementListView">
+                <thead>
+                    <tr>
+                        <th class="title-column">Title</th>
+                        <th class="message-column">Message</th>
+                        <th class="date-column">Created At</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="announcementTable"></tbody>
+            </table>
+        </div>
+
+        <div id="announcementCardView"></div>
+
+        <div id="createAnnouncementModal" class="modal">
+            <div class="announcement-modal">
+                <h2 class="form-header">Create Announcement</h2>
+                <form id="announcementForm">
+                    <h3>Title:</h3> <input id="announcementTitle" placeholder="Announcement title" required/>
+                    <h3>Announcement Message:</h3><textarea id="announcementMessage" placeholder="Announcement message" required></textarea>
+                    <h3>Category Selection:</h3>
+                    <select id="announcementCategory" required>
+                        <option value="">Select Category</option>
+                    </select>
+                    <button class="submit-btn" type="submit">Submit</button>
+                    <button class="close-btn" onclick="announcement.staff().closeForm()"><i class="fa-solid fa-xmark"></i></button>
+                </form>
+            </div>
+        </div>
+
+        <div id="createCategorySection" class="modal">
+            <div class="announcement-modal">
+                <h3>Create New Category</h3>
+                <form id="categoryForm">
+                    <input type="text" id="newCategory" placeholder="Enter Category Name..." required />
+                    <button class="add-btn" type="submit">Add Category</button>
+                </form>
+                <button class="close-btn" onclick="announcement.staff().closeCategory()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+
+        <div id="announcementBadge" class="badge"></div>
+    </section>
+
+
+    <section id="homeowners" class="section">
+        <div class="header">
+            <h1>🏠 List of Homeowners</h1>
+        </div>
+
+        <div class="controls">
+            <button id="addHomeowner" onclick="homeowner.openForm()"><i class="fa-solid fa-user-plus"></i> Add a Homeowner</button>
+
+            <div class="rightControls">
+                <div class="search-section">
+                    <i class="fa-solid fa-magnifying-glass"></i><input class="searchHomeowner" type="text" id="searchInput" placeholder="Search Homeowner..."/>
+                </div>
+
+                <div class="filter-btn">
+                    <i class="fa-solid fa-filter"></i> Filter
+                    <select id="statusFilter">
+                        <option value="all">All</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+
+                <button class="view-btn" onclick="homeowner.switchView('list')"><i class="fa-solid fa-list-ul"></i> List View</button>
+                <button class="view-btn" onclick="homeowner.switchView('card')"><i class="fa-solid fa-layer-group"></i> Card View</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="homeownerListView">
+                <thead>
+                    <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact Number</th>
+                    <th>Status</th>
+                    <th>Type of User</th>
+                    <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody id="homeownerTbody">
+                    <tr>
+                    <td colspan="5" class="no-data">
+                        <i class="fa fa-box-open"></i> Loading...
+                    </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="homeownerCardView"></div>
+
+         <div class="modal" id="homeownerModal">
+            <div class="modal-content">
+                <h2>Add Homeowner</h2>
+                <input type="text" id="nameInput" placeholder="Full Name" required />
+                <input type="text" id="contactInput" placeholder="Contact Number" required />
+                <select id="statusInput">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+                <button id="submitHomeowner">Add</button>
+                <button class="close-modal" id="closeModal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+
+        <div id="createHomeownerModal" class="modal">
+            <div class="createUser">
+                <form id="createUserForm" class="homeowner-form">
+                    <h2 class="form-header">Create User Account</h2>
+                        <div class="input-pair">
+                            <h4>Username:</h4>
+                            <input id="userName" placeholder="Username..." required/>
+                        </div>
+
+                        <div class="input-pair password">
+                            <h4>Password:</h4>
+                            <input id="userPassword" type="password" placeholder="User Password..." required />
+                            <i class="fa-solid fa-eye toggle-password" id="userTogglePassword" title="Show Password"></i>
+                        </div>
+
+                        <div class="input-pair">
+                            <h4>Email:</h4>
+                            <input id="userEmail" placeholder="User's Email..." required/>
+                        </div>
+
+                        <div class="input-pair">
+                            <h4>Contact No:</h4>
+                            <input id="userContact" placeholder="User's phone number..." required/>
+                        </div>
+
+                    <button class="submit-btn" type="submit">Submit</button>
+                </form>
+            </div>
+            <div class="homeowner-modal">
+                <form id="createHomeownerForm" class="homeowner-form">
+                    <h2 class="form-header">Create Homeowner</h2>
+                        <div class="input-pair">
+                            <h4>Last Name:</h4>
+                            <input id="newLname" placeholder="Homeowner Last Name..." required/>
+                        </div>
+
+                        <div class="input-pair">
+                            <h4>First Name:</h4>
+                            <input id="newFname" placeholder="Homeowner First Name..." required/>
+                        </div>
+
+                        <div class="input-pair">
+                            <h4>Middle Name:</h4>
+                            <input id="newMname" placeholder="Homeowner Middle Name..." />
+                        </div>
+
+                        <div class="input-pair">
+                            <h4>Email:</h4>
+                            <input id="homeownerEmail" placeholder="Homeowner's Email..." required/>
+                        </div>
+
+                        <div class="input-pair">
+                            <h4>Contact No:</h4>
+                            <input id="homeownerContact" placeholder="Homeowner's phone number..." required/>
+                        </div>
+
+                        <div class="input-pair">
+                            <h4>Status:</h4>
+                            <select id="newStatus">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+
+                        <div class="input-pair">
+                            <h4>Type of user:</h4>
+                            <select id="typeUser">
+                                <option value="active">Homeowner</option>
+                                <option value="inactive">Renter</option>
+                            </select>
+                        </div>
+                    <button class="close-btn" type="button" id="closeCreateModal"><i class="fa-solid fa-xmark"></i></button>
+                </form>
+            </div>
+            
+        </div>
+
+        <div id="editHomeownerModal" class="modal">
+            <div class="modal-content">
+                <h3 class="form-header">Edit Homeowner</h3>
+                <form id="editHomeownerForm">
+                    <input type="hidden" id="editId" />
+
+                    <div class="input-pair">
+                        <h4>Last Name:</h4>
+                        <input id="editLname" type="text" placeholder="Name" required>
+                    </div>
+
+                    <div class="input-pair">
+                        <h4>Middle Name:</h4>
+                        <input id="editMname" type="text" placeholder="Name" >
+                    </div>
+
+                    <div class="input-pair">
+                        <h4>First Name:</h4>
+                        <input id="editFname" type="text" placeholder="Name" required>
+                    </div>
+
+                    <div class="input-pair">
+                        <h4>Email:</h4>
+                        <input id="editEmail" type="text" placeholder="Name" required>
+                    </div>
+                    
+                    <div class="input-pair">
+                        <h4>Contact Number:</h4>
+                        <input id="editContact" type="text" placeholder="Address" required>
+                    </div>
+
+                    <div class="input-pair">
+                        <h4>Type of User:</h4>
+                        <select id="editTypeUser" required>
+                        <option value="owner">Owner</option>
+                        <option value="renter">Renter</option>
+                        </select>
+                    </div>
+
+                    <div class="input-pair">
+                        <h4>Status:</h4>
+                        <select id="editStatus" required>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button class="submit-btn" type="submit">Save</button>
+                        <button class="close-btn" type="button" id="closeEditModal" onclick="homeowner.closeEditModal()"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+   </section>
+    
+   <section id="due-overview" class="section">
+        <div class="header"><h1>💰 Due Overview</h1></div>
+        <div class="controls">
+            <button id="addDue" onclick="due.staff().openForm()">
+            <i class="fa-solid fa-magnifying-glass"></i> Create a Transaction
+            </button>
+
+            <div class="rightControls">
+            <div class="search-section">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input class="searchHomeowner" type="text" id="searchDue" placeholder="Search Homeowner..." required/>
+            </div>
+            <div class="filter-btn"><i class="fa-solid fa-filter"></i> Filters: 
+                <select id="due_categoryFilter">
+                    <option value="all">Select Category</option>
+                    <option value="Yearly">Yearly Due</option>
+                <option value="Monthly">Monthly Due</option>
+                </select>
+                <select id="due_statusFilter">
+                    <option value="all">Select Status</option>
+                    <option>Complete</option>
+                    <option>On going</option>
+                    <option>Overdue</option>
+                </select>
+                <select id="due_archivedFilter">
+                    <option value="include">Include Archived</option>
+                    <option value="active">Active Only</option>
+                </select>
+            </div>
+
+            <button class="view-btn" onclick="due.staff().switchView('list')"><i class="fa-solid fa-list-ul"></i> List View</button>
+            <button class="view-btn" onclick="due.staff().switchView('card')"><i class="fa-solid fa-layer-group"></i> Card View</button>
+            <button class="view-btn" onclick="due.staff().switchView('archive')"><i class="fa-solid fa-box-archive"></i> View Archives</button>
+            <button class="view-btn" onclick="due.staff().switchView('chart')"><i class="fa-solid fa-chart-simple"></i> Chart View</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="dueListView">
+                <thead>
+                <tr>
+                    <th>Receipt No.</th>
+                    <th>Home Owner</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Paid Amount</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Payment Method</th>
+                    <th class="note-column">Notes</th>
+                    <th>Function</th>
+                </tr>
+                </thead>
+                <tbody id="dueTable"></tbody>
+            </table>
+        </div>
+
+        <div id="dueCardView"></div>
+
+        <div id="dueChartView" class="chart-flex">
+            <div id="pieChart_status" class="chart-box"></div>
+            <div id="barChart_type" class="chart-box"></div>
+            <div id="columnBarChart_total" class="chart-box"></div>
+        </div>
+
+        <div class="table-container">
+            <table id="dueArchiveView" class="hidden">
+                <thead>
+                <tr>
+                    <th>Receipt No.</th>
+                    <th>Home Owner</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Paid Amount</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Archived Date</th>
+                    <th>Notes:</th>
+                    <th>Function:</th>
+                </tr>
+                </thead>
+                <tbody id="archiveTable"></tbody>
+            </table>
+        </div>
+
+        <div id="createDueModal" class="modal">
+            <div class="due-modal-container">
+            <form id="createDueForm">
+                <h2 class="form-header">Due Payment Form</h2>
+
+                <div class="input-pair">
+                <h4>Homeowner ID:</h4>
+                <input id="due-homeownerId" placeholder="Homeowner ID..." required/>
+                </div>
+
+                <div class="input-pair">
+                <h4>Type of Due:</h4>
+                <select id="dueType" required>
+                    <option value="Monthly">Monthly</option>
+                    <option value="Yearly">Yearly</option>
+                </select>
+                </div>
+
+                <div class="input-pair">
+                <h4>Description:</h4>
+                <input id="dueDescription" placeholder="Payment Due Description..." />
+                </div>
+
+                <div class="input-pair">
+                    <h4>Amount:</h4>
+                    <input type="number" id="dueAmount" step="0.01" required placeholder="Payment Due Amount..." required/>
+                </div>
+
+                <div class="input-pair">
+                    <h4>Paid Amount:</h4>
+                    <input type="number" id="duePaidAmount" step="0.01" required placeholder="Payment Due Amount..." required/>
+                </div>
+
+                <div class="input-pair">
+                    <h4>Due Date:</h4>
+                    <input type="date" id="dueDate" placeholder="Payment Due Date..." required/>
+                </div>
+
+                <div class="input-pair">
+                    <h4>Late Fee:</h4>
+                    <input type="number" id="dueLateFee" step="0.01" placeholder="Due Late Fee..." />
+                </div>
+
+                <div class="input-pair">
+                    <h4>Payment Date:</h4>
+                    <input type="date" id="duePaymentDate" placeholder="Payment Date..." required/>
+                </div>
+
+                <div class="input-pair">
+                <h4>Payment Method:</h4>
+                <select id="paymentMethod" required>
+                    <option value="Cash">Cash</option>
+                    <option value="GCash">GCash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="Check">Check</option>
+                </select>
+                </div>
+
+                <div class="input-pair">
+                <h4>Billing Period:</h4>
+                <input type="month" id="dueBillingPeriod" required/>
+                </div>
+
+                <div class="input-pair">
+                <h4>Notes:</h4>
+                <textarea id="dueNote"></textarea>
+                </div>
+
+                <!-- <div class="input-pair">
+                <h4>Recurring Payment:</h4>
+                <label class="switch">
+                    <input id="recurringPayment" type="checkbox" />
+                    <span class="slider round"></span>
+                </label>
+                </div> -->
+
+                <button class="submit-btn" type="submit">Submit</button>
+                <button class="close-btn" type="button" id="closeCreateModal" onclick="due.staff().closeCreateModal()">
+                <i class="fa-solid fa-xmark"></i>
+                </button>
+            </form>
+
+            <div class="dueReceipt">
+                <div id="receiptContainer" class="hidden">
+                <h2 class="due-header">Due Receipt</h2>
+                <div class="receipt">
+                    <div class="logos-header">
+                        <div class="header-text">
+                            <h2>BARANGAY 26 HOMEOWNERS' ASSOCIATION</h2>
+                            <p>123 Subdivision, City</p>
+                            <p class="official-receipt">Official Receipt</p>
+                        </div>
+                        <div class="logo-container">
+                            <img id="logo1" class="receipt-logo" src="./assets/logo.png" alt="Association Logo" />
+                        </div>
+                    </div>
+
+                    <div class="receipt-body">
+                    <div class="receipt-row"><span>Receipt No:</span><span id="displayReceiptNo">R003-2025-001</span></div>
+                    <div class="receipt-row"><span>Date:</span><span id="displayDate">July 5, 2025</span></div>
+                    <div class="receipt-row"><span>Homeowner:</span><span id="displayHomeowner">-</span></div>
+                    <div class="receipt-row"><span>Description:</span><span id="displayDescription">-</span></div>
+                    <div class="receipt-row"><span>Subtotal:</span><span id="displaySubtotal">₱0.00</span></div>
+                    <div class="receipt-row"><span>Late Fee:</span><span id="displayLateFee">₱0.00</span></div>
+                    <div class="receipt-row total-row"><span>Total Due:</span><span id="displayTotalDue">₱0.00</span></div>
+                    <div class="receipt-row"><span>Status:</span><span id="displayStatus">-</span></div>
+                    <div class="receipt-row"><span id="displayAmountLabel">Amount Paid:</span><span id="displayPaidAmount">₱0.00</span></div>
+                    <div class="receipt-row"><span id="displayBalanceLabel">Balance Due:</span><span id="displayBalance">₱0.00</span></div>
+                    <div class="receipt-row"><span id="displayChangeLabel">Change:</span><span id="displayChange">₱0.00</span></div>
+                    <div class="receipt-row"><span>Payment Method:</span><span id="displayMethod">-</span></div>
+                    <div class="receipt-row"><span>Notes:</span><span id="displayNotes">-</span></div>
+                    </div>
+
+                    <div class="receipt-footer">
+                    <p>Thank you for your payment!</p>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="due-print-btn" onclick="due.staff().printReceipt()" type="submit" id="printBtn">Print Receipt</button>
+                </div>
+                </div>
+
+                <div id="emptyState">
+                <p>No receipt generated yet. Fill the form and click "Generate Receipt".</p>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div id="duePaymentModal" class="modal">
+            <div class="duePayment-modal-container">
+            <form id="partialPaymentForm" class="paymentForm">
+                <h3 class="form-header">Partial Due Payment Form</h3>
+                <input type="hidden" id="editId" />
+
+                <div class="payment-input-pair"><span><strong>Name:</strong></span><span id="partialHomeownerName">Homeowner Name</span></div>
+                <div class="payment-input-pair"><span><strong>Amount:</strong></span><span id="partialHomeownerAmount">Amount</span></div>
+                <div class="payment-input-pair"><span><strong>Due Type:</strong></span><span id="partialHomeownerType">Type</span></div>
+                <div class="payment-input-pair"><span><strong>Status:</strong></span><span id="partialHomeownerStatus">Status</span></div>
+                <div class="payment-input-pair"><span><strong>Description:</strong></span><span id="partialHomeownerDescription">Description</span></div>
+                <div class="payment-input-pair"><span><strong>Note:</strong></span><span id="partialHomeownerNote">Note</span></div>
+
+                <div class="payment-input-pair">
+                <h4>Type of Due:</h4>
+                <select id="partialDueTypeSelect">
+                    <option value="Monthly">Monthly</option>
+                    <option value="Yearly">Yearly</option>
+                </select>
+                </div>
+
+                <div class="payment-input-pair">
+                    <h4>Paid Amount:</h4>
+                    <input type="number" id="partialPaidAmount" step="0.01" required />
+                </div>
+
+                <div class="payment-input-pair">
+                    <h4>Payment Date:</h4>
+                    <input type="date" id="partialPaymentDate" />
+                </div>
+
+                <div class="payment-input-pair">
+                    <h4>Late Fee:</h4>
+                    <input type="number" id="partialLateFee" step="0.01" />
+                </div>
+
+                <div class="payment-input-pair">
+                    <h4>Payment Method:</h4>
+                    <select id="partialPaymentMethod">
+                        <option value="Cash">Cash</option>
+                        <option value="GCash">GCash</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                        <option value="Check">Check</option>
+                    </select>
+                </div>
+
+                <div class="payment-input-pair">
+                    <h4>Note:</h4>
+                    <textarea id="partialNote" maxlength="120" rows="2"></textarea>
+                </div>
+
+                <button class="payment-submit-btn" onclick="due.staff().partialPayment()" type="submit">Submit</button>
+                <button class="close-btn" type="button" onclick="due.staff().closePaymentForm()"><i class="fa-solid fa-xmark"></i></button>
+            </form>
+
+            <div class="dueReceipt">
+                <div id="partialReceiptContainer" class="hidden">
+                <h2 class="due-header">Due Receipt</h2>
+                <div class="receipt">
+                    <div class="logos-header">
+                    <div class="header-text">
+                        <h2>BARANGAY 26 HOMEOWNERS' ASSOCIATION</h2>
+                        <p>123 Subdivision, City</p>
+                        <p class="official-receipt">Official Receipt</p>
+                    </div>
+                    <div class="logo-container">
+                        <img class="receipt-logo" src="./assets/logo.png" alt="Association Logo" />
+                    </div>
+                    </div>
+
+                    <div class="receipt-body">
+                    <div class="receipt-row"><span>Receipt No:</span><span id="partial-displayReceiptNo">R003-2025-001</span></div>
+                    <div class="receipt-row"><span>Date:</span><span id="partial-displayDate">July 5, 2025</span></div>
+                    <div class="receipt-row"><span>Homeowner:</span><span id="partial-displayHomeowner">-</span></div>
+                    <div class="receipt-row"><span>Description:</span><span id="partial-displayDescription">-</span></div>
+                    <div class="receipt-row"><span>Subtotal:</span><span id="partial-displaySubtotal">₱0.00</span></div>
+                    <div class="receipt-row"><span>Late Fee:</span><span id="partial-displayLateFee">₱0.00</span></div>
+                    <div class="receipt-row total-row"><span>Total Due:</span><span id="partial-displayTotalDue">₱0.00</span></div>
+                    <div class="receipt-row"><span>Status:</span><span id="partial-displayStatus">-</span></div>
+                    <div class="receipt-row"><span>Amount Paid:</span><span id="partial-displayPaidAmount">₱0.00</span></div>
+                    <div class="receipt-row"><span>Balance Due:</span><span id="partial-displayBalance">₱0.00</span></div>
+                    <div class="receipt-row"><span>Change:</span><span id="partial-displayChange">₱0.00</span></div>
+                    <div class="receipt-row"><span>Payment Method:</span><span id="partial-displayMethod">-</span></div>
+                    <div class="receipt-row"><span>Notes:</span><span id="partial-displayNotes">-</span></div>
+                    </div>
+
+                    <div class="receipt-footer">
+                    <p>Thank you for your payment!</p>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="due-print-btn" onclick="due.staff().printReceipt()" type="button">Print Receipt</button>
+                    </div>
+                </div>
+                </div>
+
+                <div id="partialEmptyState">
+                <p>No receipt generated yet. Fill the form and click "Submit Payment".</p>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div id="dueNoteModal" class="modal">
+            <div class="modal-content">
+            <h2 class="form-header">Create Due Note</h2>
+            <span><strong>Name:</strong></span>
+            <span id="dueNoteHomeownerName"><strong>Homeowner Name</strong></span>
+            <div class="dueNoteInput">
+                <h4>Notes:</h4>
+                <textarea id="AddNote" placeholder="Enter your note..."></textarea>
+            </div>
+            <button class="submit-btn" onclick="due.staff().saveNote()" type="submit">Submit</button>
+            <button class="close-btn" type="button" onclick="due.staff().closeNote()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="calendar-event" class="section">
+        <div class="header"><h1>📅 Calendar & Events</h1></div>
+        <div class="calendar-wrapper">
+            <div class="calendar-left">
+                <div class="calendar-header">
+                <button onclick="calendar.changeMonth(-1)">&#8592;</button>
+                <h2 id="monthYear">Month Year</h2>
+                <button onclick="calendar.changeMonth(1)">&#8594;</button>
+                </div>
+                <div class="day-names">
+                <div class="day-name">Sun</div>
+                <div class="day-name">Mon</div>
+                <div class="day-name">Tue</div>
+                <div class="day-name">Wed</div>
+                <div class="day-name">Thu</div>
+                <div class="day-name">Fri</div>
+                <div class="day-name">Sat</div>
+                </div>
+                <div class="days-grid" id="calendarDays"></div>
+            </div>
+
+            <div class="calendar-middle">
+                <div class="event-header"><h2>Events</h2></div>
+                <div class="event-content" id="eventArea">
+                <p>Select a day to view or add events.</p>
+                </div>
+            </div>
+
+            <div class="calendar-right">
+                <div id="upcomingEventsArea"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="concern" class="section">
+            <div class="controls">
+                <div class="header">
+                    <h1>⚠️ Concern Management</h1>
+                </div>
+
+                <div class="rightControls">
+                    <div class="filter-btn">
+                        <label for="concernStatusFilter"><i class="fa-solid fa-filter"></i> Filter</label>
+                        <select id="concernStatusFilter">
+                            <option value="all">All</option>
+                            <option value="Resolved">Resolved</option>
+                            <option value="Unresolved">Unresolved</option>
+                        </select> 
+                    </div>
+                    
+                    <button class="view-btn" onclick="concern.member().switchView('list')"><i class="fa-solid fa-list-ul"></i> List View</button>
+                    <button class="view-btn" onclick="concern.member().switchView('card')"><i class="fa-solid fa-layer-group"></i> Card View</button>                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="concernListView">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Message</th>
+                        <th>Homeowner</th>
+                        <th>Date Created</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="concernTable"></tbody>
+                </table>
+            </div>
+
+            <div id="concernCardView" class="hidden"></div>
+            
+                <div id="createConcernModal" class="modal">
+                    <div class="concern-modal">
+                    <form id="concernForm">
+                        <h2 class="form-header">Concern Report</h2>
+                        <h3>Title:</h3> <input id="concernTitle" placeholder="Announcement title"></input>
+                        <h3>Message:</h3><textarea id="concernMessage" placeholder="Announcement message"></textarea>
+                        <h3>Category:</h3><input id="concernCategory" placeholder="Announcement title"></input>
+                        <button class="submit-btn" type="submit">Submit</button>
+                        <button class="close-btn" onclick="concern.staff().closeForm()"><i class="fa-solid fa-xmark"></i></button>
+                    </form>
+                </div>
+            </div>
+    </section>
+</body>
+</html>
+
+<script>
+    function showSection(sectionId) {
+        document.querySelectorAll('.section').forEach(section => {
+            section.classList.remove('active');
+        });
+        document.getElementById(sectionId).classList.add('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const nav = document.querySelector('nav');
+        const sidebar = document.querySelector('.sidebar');
+
+        if (nav && sidebar) {
+            nav.addEventListener('click', function(event) {
+                if (event.target === nav || event.target.closest('nav::before')) {
+                    sidebar.classList.toggle('open');
+                    event.stopPropagation();
+                }
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!sidebar.contains(event.target) && !nav.contains(event.target)) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        }
+    });
+</script>

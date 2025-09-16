@@ -1,0 +1,27 @@
+name: Supabase Ping
+
+on:
+  workflow_dispatch: # Manual trigger
+  schedule:
+    - cron: '0 * * * *' # Runs hourly
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Supabase ping
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: node node ./api/keep-alive.js

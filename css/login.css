@@ -1,0 +1,422 @@
+@font-face {
+    font-family: 'Myra Pro';
+    src: url('fonts/MyraPro.woff2') format('woff2'),
+         url('fonts/MyraPro.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    width: 100%;
+    height: 980px;
+    margin: 0;
+    padding: 0;
+    font-family: 'Myra Pro', sans-serif;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.5)), url('../assets/background.jpg');
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10vw;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 1rem;
+}
+
+.intro h1 {
+    display: block;
+    margin: 0;
+    color: white;
+    font-size: 4.5rem;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.8);
+    padding: 0;
+}
+
+.moveleft {
+    position: relative;
+    left: 5rem;
+}
+
+.moveleft1 {
+    position: relative;
+    left: 10rem;
+}
+
+.login {
+    display: flex;
+    flex-direction: column;
+    width: 35vw;
+    max-width: 500px;
+    min-width: 300px;
+    border-radius: 1rem;
+    background-color: white;
+    padding: 1.5rem;
+    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.login p:hover {
+    color: green;
+}
+
+.login p {
+    color: #333;
+    font-size: 0.9rem;
+    margin-top: 1px;
+    font-style: italic;
+}
+
+.login h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    width: 100%;
+}
+
+.login form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+input[type="submit"] {
+    cursor: pointer;
+}
+
+.submit:hover {
+    background-color: green;
+}
+
+.submit {
+    width: 100px;
+    height: 30px;
+    background-color: #333;
+    color: white;
+    font-size: 0.9rem;
+    border-radius: 1rem;
+    margin-top: 1rem;
+    border: none;
+}
+
+.input-group i {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.input-group input {
+    width: 60%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    box-sizing: border-box;
+}
+
+.footer a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+    color: white;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.logo img {
+    display: block;
+    width: 150px;
+    height: auto;
+}
+
+.businesslogo img {
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+    position: absolute;
+    bottom: 3.5rem;
+    left: 2.5rem;
+    height: 150px;
+}
+
+.warning-message {
+    position: relative;
+    background-color: #ffebee;
+    border-radius: 10px;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;
+    border-left: 5px solid #f44336;
+    animation: fadeIn 0.8s ease-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 0.5rem;
+}
+
+.warning-icon {
+    color: #f44336;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    animation: pulse 2s infinite;
+    display: flex;
+    align-items: center;
+    align-self: center;
+}
+
+.warning-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.warning-content p {
+    color: #b71c1c;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0;
+    font-style: normal;
+    max-width: 100%;
+}
+
+.warning-content h3 {
+    color: #d32f2f;
+    font-size: 1rem;
+    margin: 0 0 5px 0;
+    font-weight: bold;
+}
+
+.close-warning {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.3rem;
+    background: none;
+    border: none;
+    color: #721c24;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.toggle-password {
+    font-size: 1rem;
+    color: #333;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+.password-wrapper {
+    gap: 0.5rem;
+    margin-left: 4.8rem;
+    display: flex;
+    align-items: center;
+    width: 90%;
+}
+
+.password-wrapper input {
+    width: 58%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+@media (max-width: 1280px) {
+    .intro h1 {
+        font-size: 3.5rem;
+    }
+
+    .moveleft {
+        left: 3rem;
+    }
+
+    .moveleft1 {
+        left: 6rem;
+    }
+
+    .login {
+        width: 40vw;
+        max-width: 400px;
+        padding: 1.2rem;
+    }
+
+    .container {
+        gap: 5vw;
+    }
+
+    .businesslogo img {
+        height: 120px;
+        left: 1rem;
+        bottom: 1rem;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .footer a {
+        font-size: 1rem;
+    }
+
+    .logo img {
+        width: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        height: auto;
+    }
+
+    .intro h1 {
+        text-align: center;
+        font-size: 2.5rem;
+    }
+
+    .moveleft, .moveleft1 {
+        left: 1rem;
+    }
+
+    .login {
+        max-width: 400px;
+        padding: 30px;
+        margin: 20px auto;
+    }
+
+    .login h3 {
+        font-size: 1.2rem;
+    }
+
+    .login p {
+        font-size: 0.9rem;
+    }
+
+    .input-group input, .password-wrapper input {
+        width: 100%;
+        padding: 8px;
+    }
+
+    .password-wrapper {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .submit {
+        width: 80px;
+        height: 25px;
+        font-size: 0.9rem;
+    }
+
+    .footer {
+        flex-direction: column;
+        gap: 10px;
+        position: relative;
+        padding: 10px;
+    }
+
+    .footer a {
+        font-size: 1rem;
+    }
+
+    .logo img {
+        width: 100px;
+    }
+
+    .businesslogo img {
+        margin-top: 2rem;
+        margin-left: 0%;
+        box-shadow: none;
+        position: relative;
+        height: 130px;
+    }
+}
+
+@media (max-width: 412px) {
+    .intro h1 {
+        text-align: center;
+    }
+
+    .businesslogo img {
+        background: none;
+        border-radius: 50%;
+        box-shadow: none;
+    }
+
+    .login h3 {
+        font-size: 1rem;
+    }
+
+    .submit {
+        width: 70px;
+        height: 22px;
+        font-size: 0.8rem;
+    }
+
+    .footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+    }
+
+    .footer a {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        font-size: 1rem;
+        width: 100%;
+        text-align: center;
+    }
+
+    .footer a i {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+    }
+    .logo img {
+        margin-top: 1rem;
+        width: 100px;
+    }
+
+    .businesslogo img {
+        margin-top: 2rem;
+        margin-left: 0%;
+        height: 100px;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+    }
+}
